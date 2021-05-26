@@ -46,7 +46,7 @@ public class ArticleController {
     public ResponseEntity<List<Article>> getArticlesByPage(@RequestParam(value = "page_num", defaultValue = "1") Integer pageNum,
                                                            @RequestParam(value = "page_size", defaultValue = "10") Integer pageSize) {
 
-        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize, Sort.by(Sort.Order.desc("create_time")));
+        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize, Sort.by(Sort.Order.desc("createTime")));
         List<ArticleEntity> articleEntityList = mArticleRepository.findAll(pageRequest).getContent();
         List<ReadRecordEntity> readRecordEntityList = new ArrayList<>();
         for (ArticleEntity e : articleEntityList) {
