@@ -1,13 +1,22 @@
 package cn.hjf.lzsdq.article.controller;
 
-import cn.hjf.lzsdq.article.dao.table.Article;
+import cn.hjf.lzsdq.article.biz.model.Article;
+import cn.hjf.lzsdq.article.biz.transfer.ArticleTransfer;
+import cn.hjf.lzsdq.article.biz.transfer.ParagraphTransfer;
+import cn.hjf.lzsdq.article.dao.entity.ArticleEntity;
+import cn.hjf.lzsdq.article.dao.entity.ParagraphEntity;
+import cn.hjf.lzsdq.article.dao.entity.ReadRecordEntity;
 import cn.hjf.lzsdq.article.dao.repository.ArticleRepository;
 import cn.hjf.lzsdq.article.dao.repository.ParagraphRepository;
+import cn.hjf.lzsdq.article.dao.repository.ReadRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -16,7 +25,10 @@ public class ArticleController {
 
     @Autowired
     private ArticleRepository mArticleRepository;
+    @Autowired
     private ParagraphRepository mParagraphRepository;
+    @Autowired
+    private ReadRecordRepository mReadRecordRepository;
 
 //    @RequestMapping("/")
 //    @CrossOrigin
@@ -42,17 +54,37 @@ public class ArticleController {
     @GetMapping("/{aid}")
     @CrossOrigin
     public ResponseEntity<Article> getArticleById(@PathVariable(value = "aid") Integer articleId) {
-        Optional<Article> optional = mArticleRepository.findById(Long.valueOf(articleId));
+        Optional<ArticleEntity> optional = mArticleRepository.findById(Long.valueOf(articleId));
         if (optional.isPresent()) {
-            Article article = optional.get();
+            ArticleEntity articleEntity = optional.get();
 
-//            Paragraph p = new Paragraph();
-//            p.setArticleId(article.getId());
-//            Example<Paragraph> example = Example.of(p);
-//            Sort s = Sort.by(Sort.Order.desc("sequence"));
-//            List<Paragraph> paragraphList = mParagraphRepository.findAll(example, s);
-//
-//            article.setParagraphs(paragraphList);
+            // 查询段落
+            ParagraphEntity p = new ParagraphEntity();
+            p.setArticleId(articleEntity.getId());
+            Example<ParagraphEntity> pe = Example.of(p);
+            Sort s = Sort.by(Sort.Order.asc("sequence"));
+            List<ParagraphEntity> paragraphEntityList = mParagraphRepository.findAll(pe, s);
+
+            //查询并更新阅读信息
+            ReadRecordEntity r = new ReadRecordEntity();
+            r.setArticleId(articleEntity.getId());
+            Example<ReadRecordEntity> re = Example.of(r);
+            Optional<ReadRecordEntity> rrOptional = mReadRecordRepository.findOne(re);
+            ReadRecordEntity readRecordEntity;
+            if (rrOptional.isPresent()) {
+                readRecordEntity = rrOptional.get();
+                readRecordEntity.setReadCount(readRecordEntity.getReadCount() + 1);
+            } else {
+                readRecordEntity = new ReadRecordEntity();
+                readRecordEntity.setArticleId(articleEntity.getId());
+                readRecordEntity.setReadCount(Long.valueOf(1));
+            }
+            mReadRecordRepository.save(readRecordEntity);
+
+            // 构建业务层返回值
+            Article article = new ArticleTransfer().fromEntity(articleEntity);
+            article.setParagraphs(new ParagraphTransfer().fromEntityList(paragraphEntityList));
+            article.setReadCount(readRecordEntity.getReadCount());
 
             return ResponseEntity.ok(article);
         } else {

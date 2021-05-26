@@ -1,22 +1,10 @@
-package cn.hjf.lzsdq.article.dao.table;
+package cn.hjf.lzsdq.article.biz.model;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "paragraph")
 public class Paragraph {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column(name = "article_id")
     private Long articleId;
-
-    @Column(name = "sequence")
     private Long sequence;
-
-    @Column(name = "content")
     private String content;
 
     public Long getId() {

@@ -1,14 +1,13 @@
-package cn.hjf.lzsdq.article.dao.table;
+package cn.hjf.lzsdq.article.dao.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "article")
-public class Article {
+public class ArticleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,11 +22,6 @@ public class Article {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_time")
     private Date createTime;
-
-    @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "article_id")
-    @OrderBy("sequence asc")
-    private List<Paragraph> paragraphs;
 
     public Long getId() {
         return id;
@@ -59,13 +53,5 @@ public class Article {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-    }
-
-    public List<Paragraph> getParagraphs() {
-        return paragraphs;
-    }
-
-    public void setParagraphs(List<Paragraph> paragraphs) {
-        this.paragraphs = paragraphs;
     }
 }
