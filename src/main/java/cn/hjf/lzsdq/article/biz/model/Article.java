@@ -10,7 +10,7 @@ public class Article {
     private String summary;
     private Date createTime;
     private List<Paragraph> paragraphs;
-    private Long readCount;
+    private ReadRecord readRecord;
 
     public Long getId() {
         return id;
@@ -52,11 +52,11 @@ public class Article {
         this.paragraphs = paragraphs;
     }
 
-    public Long getReadCount() {
-        return readCount;
+    public ReadRecord getReadRecord() {
+        return readRecord;
     }
 
-    public void setReadCount(Long readCount) {
-        this.readCount = readCount;
+    public void setReadRecord(ReadRecord readRecord) {
+        this.readRecord = readRecord;
     }
 }

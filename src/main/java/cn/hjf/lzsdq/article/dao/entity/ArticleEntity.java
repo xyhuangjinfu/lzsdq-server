@@ -23,7 +23,8 @@ public class ArticleEntity {
     @Column(name = "create_time")
     private Date createTime;
 
-    
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "article_id")
     private ReadRecordEntity readRecord;
 
     public Long getId() {
@@ -56,5 +57,13 @@ public class ArticleEntity {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public ReadRecordEntity getReadRecord() {
+        return readRecord;
+    }
+
+    public void setReadRecord(ReadRecordEntity readRecord) {
+        this.readRecord = readRecord;
     }
 }

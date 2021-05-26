@@ -1,6 +1,9 @@
 package cn.hjf.lzsdq.article.dao.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "read_record")
@@ -15,6 +18,10 @@ public class ReadRecordEntity {
 
     @Column(name = "read_count")
     private Long readCount;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "last_read_time")
+    private Date lastReadTime;
 
     public Long getId() {
         return id;
@@ -38,5 +45,13 @@ public class ReadRecordEntity {
 
     public void setReadCount(Long readCount) {
         this.readCount = readCount;
+    }
+
+    public Date getLastReadTime() {
+        return lastReadTime;
+    }
+
+    public void setLastReadTime(Date lastReadTime) {
+        this.lastReadTime = lastReadTime;
     }
 }
