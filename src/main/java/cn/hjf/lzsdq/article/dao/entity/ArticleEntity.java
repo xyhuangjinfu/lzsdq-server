@@ -23,6 +23,9 @@ public class ArticleEntity {
     @Column(name = "create_time")
     private Date createTime;
 
+    
+    private ReadRecordEntity readRecord;
+
     public Long getId() {
         return id;
     }

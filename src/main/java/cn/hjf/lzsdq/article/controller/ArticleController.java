@@ -1,5 +1,6 @@
 package cn.hjf.lzsdq.article.controller;
 
+import cn.hjf.lzsdq.Knowledge;
 import cn.hjf.lzsdq.article.biz.model.Article;
 import cn.hjf.lzsdq.article.biz.transfer.ArticleTransfer;
 import cn.hjf.lzsdq.article.biz.transfer.ParagraphTransfer;
@@ -11,6 +12,7 @@ import cn.hjf.lzsdq.article.dao.repository.ParagraphRepository;
 import cn.hjf.lzsdq.article.dao.repository.ReadRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,27 +32,40 @@ public class ArticleController {
     @Autowired
     private ReadRecordRepository mReadRecordRepository;
 
-//    @RequestMapping("/")
-//    @CrossOrigin
-//    public ResponseEntity<List<Knowledge>> getKnowledgeByPage(@RequestParam(value = "page_num", defaultValue = "1") Integer pageNum,
-//                                                              @RequestParam(value = "page_size", defaultValue = "10") Integer pageSize) {
-//        System.out.println("pageNum  " + pageNum);
-//        System.out.println("pageSize  " + pageSize);
-//        return ResponseEntity.ok(knowledgeRepository.findAll(PageRequest.of(pageNum - 1, pageSize)).getContent());
-//    }
-//
-//    @GetMapping("/{kid}")
-//    @CrossOrigin
-//    public ResponseEntity<Knowledge> getKnowledgeById(@PathVariable(value = "kid") Integer knowledgeId) {
-//        System.out.println("knowledgeId  " + knowledgeId);
-//        Optional<Knowledge> optional = knowledgeRepository.findById(Long.valueOf(knowledgeId));
-//        if (optional.isPresent()) {
-//            return ResponseEntity.ok(optional.get());
-//        } else {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//        }
-//    }
+    /**
+     * 分页获取文章列表
+     *
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping("/")
+    @CrossOrigin
+    public ResponseEntity<List<Article>> getArticlesByPage(@RequestParam(value = "page_num", defaultValue = "1") Integer pageNum,
+                                                              @RequestParam(value = "page_size", defaultValue = "10") Integer pageSize) {
+        System.out.println("pageNum  " + pageNum);
+        System.out.println("pageSize  " + pageSize);
+        return ResponseEntity.ok(knowledgeRepository.findAll(PageRequest.of(pageNum - 1, pageSize)).getContent());
+    }
 
+    @GetMapping("/{kid}")
+    @CrossOrigin
+    public ResponseEntity<Knowledge> getKnowledgeById(@PathVariable(value = "kid") Integer knowledgeId) {
+        System.out.println("knowledgeId  " + knowledgeId);
+        Optional<Knowledge> optional = knowledgeRepository.findById(Long.valueOf(knowledgeId));
+        if (optional.isPresent()) {
+            return ResponseEntity.ok(optional.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    /**
+     * 根据文章id获取文章详细信息
+     *
+     * @param articleId
+     * @return
+     */
     @GetMapping("/{aid}")
     @CrossOrigin
     public ResponseEntity<Article> getArticleById(@PathVariable(value = "aid") Integer articleId) {
