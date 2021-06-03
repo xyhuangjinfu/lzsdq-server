@@ -1,6 +1,7 @@
 package cn.hjf.lzsdq.article.controller;
 
 import cn.hjf.lzsdq.article.biz.model.Article;
+import cn.hjf.lzsdq.article.biz.model.ReadRecord;
 import cn.hjf.lzsdq.article.biz.transfer.ArticleTransfer;
 import cn.hjf.lzsdq.article.biz.transfer.ParagraphTransfer;
 import cn.hjf.lzsdq.article.biz.transfer.ReadRecordTransfer;
@@ -123,5 +124,46 @@ public class ArticleController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    /**
+     * 获取阅读量最高的文章列表
+     *
+     * @return
+     */
+    @RequestMapping("/hot")
+    @CrossOrigin
+    public ResponseEntity<List<Article>> getHotArticles(@RequestParam(value = "limit", defaultValue = "10") Integer limit) {
+        // 查询阅读量最高的文章id
+        Sort s = Sort.by(Sort.Order.desc("readCount"));
+        PageRequest pageRequest = PageRequest.of(0, limit, s);
+        List<ReadRecordEntity> readRecordEntityList = mReadRecordRepository.findAll(pageRequest).getContent();
+        List<ArticleEntity> articleEntityList = new ArrayList<>(readRecordEntityList.size());
+        final ArticleEntity nullArticleEntity = new ArticleEntity();
+        for (ReadRecordEntity e : readRecordEntityList) {
+            Optional<ArticleEntity> optional = mArticleRepository.findById(e.getArticleId());
+            if (optional.isPresent()) {
+                articleEntityList.add(optional.get());
+            } else {
+                articleEntityList.add(nullArticleEntity);
+            }
+        }
+
+        // 构建业务层返回值
+        ArticleTransfer articleTransfer = new ArticleTransfer();
+        ReadRecordTransfer readRecordTransfer = new ReadRecordTransfer();
+        List<Article> articleList = new ArrayList<>(articleEntityList.size());
+        for (int i = 0; i < articleEntityList.size(); i++) {
+            ArticleEntity ae = articleEntityList.get(i);
+            ReadRecordEntity re = readRecordEntityList.get(i);
+            if (ae != nullArticleEntity) {
+                Article a = articleTransfer.fromEntity(ae);
+                ReadRecord r = readRecordTransfer.fromEntity(re);
+                a.setReadRecord(r);
+                articleList.add(a);
+            }
+        }
+
+        return ResponseEntity.ok(articleList);
     }
 }
