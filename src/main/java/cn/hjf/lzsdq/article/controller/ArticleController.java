@@ -11,8 +11,10 @@ import cn.hjf.lzsdq.article.dao.entity.ReadRecordEntity;
 import cn.hjf.lzsdq.article.dao.repository.ArticleRepository;
 import cn.hjf.lzsdq.article.dao.repository.ParagraphRepository;
 import cn.hjf.lzsdq.article.dao.repository.ReadRecordRepository;
+import cn.hjf.lzsdq.utils.Paging;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -44,11 +46,12 @@ public class ArticleController {
      */
     @RequestMapping("/")
     @CrossOrigin
-    public ResponseEntity<List<Article>> getArticlesByPage(@RequestParam(value = "page_num", defaultValue = "1") Integer pageNum,
-                                                           @RequestParam(value = "page_size", defaultValue = "10") Integer pageSize) {
+    public ResponseEntity<Paging<Article>> getArticlesByPage(@RequestParam(value = "page_num", defaultValue = "1") Integer pageNum,
+                                                             @RequestParam(value = "page_size", defaultValue = "10") Integer pageSize) {
 
         PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize, Sort.by(Sort.Order.desc("createTime")));
-        List<ArticleEntity> articleEntityList = mArticleRepository.findAll(pageRequest).getContent();
+        Page<ArticleEntity> page = mArticleRepository.findAll(pageRequest);
+        List<ArticleEntity> articleEntityList = page.getContent();
         List<ReadRecordEntity> readRecordEntityList = new ArrayList<>();
         for (ArticleEntity e : articleEntityList) {
             //查询阅读信息
@@ -75,7 +78,11 @@ public class ArticleController {
             articleList.get(i).setReadRecord(readRecordTransfer.fromEntity(readRecordEntityList.get(i)));
         }
 
-        return ResponseEntity.ok(articleList);
+        Paging<Article> paging = new Paging<>();
+        paging.setPage(pageNum);
+        paging.setTotalPage(page.getTotalPages());
+        paging.setData(articleList);
+        return ResponseEntity.ok(paging);
     }
 
     /**
