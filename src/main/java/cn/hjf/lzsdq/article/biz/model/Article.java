@@ -8,6 +8,7 @@ public class Article {
     private Long id;
     private String title;
     private String summary;
+    private String coverUrl;
     private Date createTime;
     private List<Paragraph> paragraphs;
     private ReadRecord readRecord;
@@ -34,6 +35,14 @@ public class Article {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 
     public Date getCreateTime() {

@@ -16,6 +16,7 @@ public class ArticleTransfer {
         article.setId(articleEntity.getId());
         article.setTitle(articleEntity.getTitle());
         article.setSummary(articleEntity.getSummary());
+        article.setCoverUrl(articleEntity.getCoverUrl());
         article.setCreateTime(articleEntity.getCreateTime());
         return article;
     }

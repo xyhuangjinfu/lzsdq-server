@@ -19,6 +19,9 @@ public class ArticleEntity {
     @Column(name = "summary")
     private String summary;
 
+    @Column(name = "cover_url")
+    private String coverUrl;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_time")
     private Date createTime;
@@ -45,6 +48,14 @@ public class ArticleEntity {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 
     public Date getCreateTime() {
