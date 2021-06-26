@@ -5,12 +5,15 @@ import cn.hjf.lzsdq.article.biz.model.ReadRecord;
 import cn.hjf.lzsdq.article.biz.transfer.ArticleTransfer;
 import cn.hjf.lzsdq.article.biz.transfer.ParagraphTransfer;
 import cn.hjf.lzsdq.article.biz.transfer.ReadRecordTransfer;
+import cn.hjf.lzsdq.article.biz.transfer.VoteTransfer;
 import cn.hjf.lzsdq.article.dao.entity.ArticleEntity;
 import cn.hjf.lzsdq.article.dao.entity.ParagraphEntity;
 import cn.hjf.lzsdq.article.dao.entity.ReadRecordEntity;
+import cn.hjf.lzsdq.article.dao.entity.VoteEntity;
 import cn.hjf.lzsdq.article.dao.repository.ArticleRepository;
 import cn.hjf.lzsdq.article.dao.repository.ParagraphRepository;
 import cn.hjf.lzsdq.article.dao.repository.ReadRecordRepository;
+import cn.hjf.lzsdq.article.dao.repository.VoteRepository;
 import cn.hjf.lzsdq.utils.Paging;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -36,6 +39,8 @@ public class ArticleController {
     private ParagraphRepository mParagraphRepository;
     @Autowired
     private ReadRecordRepository mReadRecordRepository;
+    @Autowired
+    private VoteRepository mVoteRepository;
 
     /**
      * 分页获取文章列表
@@ -53,6 +58,7 @@ public class ArticleController {
         Page<ArticleEntity> page = mArticleRepository.findAll(pageRequest);
         List<ArticleEntity> articleEntityList = page.getContent();
         List<ReadRecordEntity> readRecordEntityList = new ArrayList<>();
+        List<VoteEntity> voteEntityList = new ArrayList<>();
         for (ArticleEntity e : articleEntityList) {
             //查询阅读信息
             ReadRecordEntity r = new ReadRecordEntity();
@@ -69,13 +75,29 @@ public class ArticleController {
                 readRecordEntity.setReadCount(Long.valueOf(0));
             }
             readRecordEntityList.add(readRecordEntity);
+            //查询点赞信息
+            VoteEntity v = new VoteEntity();
+            v.setArticleId(e.getId());
+            Example<VoteEntity> ve = Example.of(v);
+            Optional<VoteEntity> vOptional = mVoteRepository.findOne(ve);
+            VoteEntity voteEntity;
+            if (vOptional.isPresent()) {
+                voteEntity = vOptional.get();
+            } else {
+                voteEntity = new VoteEntity();
+                voteEntity.setArticleId(e.getId());
+                voteEntity.setVoteCount(Long.valueOf(0));
+            }
+            voteEntityList.add(voteEntity);
         }
 
         // 构建业务层返回值
         List<Article> articleList = new ArticleTransfer().fromEntityList(articleEntityList);
         ReadRecordTransfer readRecordTransfer = new ReadRecordTransfer();
+        VoteTransfer voteTransfer = new VoteTransfer();
         for (int i = 0; i < articleList.size(); i++) {
             articleList.get(i).setReadRecord(readRecordTransfer.fromEntity(readRecordEntityList.get(i)));
+            articleList.get(i).setVote(voteTransfer.fromEntity(voteEntityList.get(i)));
         }
 
         Paging<Article> paging = new Paging<>();
@@ -91,9 +113,9 @@ public class ArticleController {
      * @param articleId
      * @return
      */
-    @GetMapping("/{aid}")
+    @GetMapping("/{article_id}")
     @CrossOrigin
-    public ResponseEntity<Article> getArticleById(@PathVariable(value = "aid") Integer articleId) {
+    public ResponseEntity<Article> getArticleById(@PathVariable(value = "article_id") Integer articleId) {
         Optional<ArticleEntity> optional = mArticleRepository.findById(Long.valueOf(articleId));
         if (optional.isPresent()) {
             ArticleEntity articleEntity = optional.get();
@@ -122,10 +144,25 @@ public class ArticleController {
             readRecordEntity.setLastReadTime(new Date());
             mReadRecordRepository.save(readRecordEntity);
 
+            //查询点赞信息
+            VoteEntity v = new VoteEntity();
+            v.setArticleId(articleEntity.getId());
+            Example<VoteEntity> ve = Example.of(v);
+            Optional<VoteEntity> vOptional = mVoteRepository.findOne(ve);
+            VoteEntity voteEntity;
+            if (vOptional.isPresent()) {
+                voteEntity = vOptional.get();
+            } else {
+                voteEntity = new VoteEntity();
+                voteEntity.setArticleId(articleEntity.getId());
+                voteEntity.setVoteCount(Long.valueOf(0));
+            }
+
             // 构建业务层返回值
             Article article = new ArticleTransfer().fromEntity(articleEntity);
             article.setParagraphs(new ParagraphTransfer().fromEntityList(paragraphEntityList));
             article.setReadRecord(new ReadRecordTransfer().fromEntity(readRecordEntity));
+            article.setVote(new VoteTransfer().fromEntity(voteEntity));
 
             return ResponseEntity.ok(article);
         } else {
@@ -172,5 +209,31 @@ public class ArticleController {
         }
 
         return ResponseEntity.ok(articleList);
+    }
+
+    /**
+     * 给文章点赞
+     *
+     * @return
+     */
+    @PostMapping("/vote")
+    @CrossOrigin
+    public ResponseEntity<List<Article>> voteArticle(@RequestBody Article article) {
+        System.out.println("---------------------------");
+        System.out.println(article.getId());
+        System.out.println("---------------------------");
+        Optional<VoteEntity> optional = mVoteRepository.findById(article.getId());
+        VoteEntity voteEntity;
+        if (optional.isPresent()) {
+            voteEntity = optional.get();
+            voteEntity.setVoteCount(voteEntity.getVoteCount() + 1);
+        } else {
+            voteEntity = new VoteEntity();
+            voteEntity.setArticleId(article.getId());
+            voteEntity.setVoteCount(Long.valueOf(1));
+        }
+        mVoteRepository.save(voteEntity);
+
+        return ResponseEntity.ok(null);
     }
 }

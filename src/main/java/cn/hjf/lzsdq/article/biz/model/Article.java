@@ -12,6 +12,7 @@ public class Article {
     private Date createTime;
     private List<Paragraph> paragraphs;
     private ReadRecord readRecord;
+    private Vote vote;
 
     public Long getId() {
         return id;
@@ -67,5 +68,13 @@ public class Article {
 
     public void setReadRecord(ReadRecord readRecord) {
         this.readRecord = readRecord;
+    }
+
+    public Vote getVote() {
+        return vote;
+    }
+
+    public void setVote(Vote vote) {
+        this.vote = vote;
     }
 }
