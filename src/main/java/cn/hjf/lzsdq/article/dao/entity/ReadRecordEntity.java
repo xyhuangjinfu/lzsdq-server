@@ -2,7 +2,10 @@ package cn.hjf.lzsdq.article.dao.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
@@ -10,9 +13,6 @@ import java.util.Date;
 public class ReadRecordEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(name = "article_id")
     private Long articleId;
 
@@ -22,14 +22,6 @@ public class ReadRecordEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "last_read_time")
     private Date lastReadTime;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Long getArticleId() {
         return articleId;

@@ -13,7 +13,6 @@ public class ReadRecordTransfer {
             return null;
         }
         ReadRecord readRecord = new ReadRecord();
-        readRecord.setId(readRecordEntity.getId());
         readRecord.setArticleId(readRecordEntity.getArticleId());
         readRecord.setReadCount(readRecordEntity.getReadCount());
         readRecord.setLastReadTime(readRecordEntity.getLastReadTime());
