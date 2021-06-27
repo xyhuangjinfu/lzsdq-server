@@ -26,6 +26,16 @@ public class ArticleManager {
     private ArticleManager() {
         mLzsdqRepository = new LzsdqRepository();
 
+        update();
+    }
+
+    /**
+     * ********************************************************************************************************************
+     * <p>
+     * ********************************************************************************************************************
+     */
+
+    public void update() {
         List<ArticleEntity> articleEntityList = mLzsdqRepository.getArticleList();
         updateArticleEntityList(articleEntityList);
 
