@@ -131,7 +131,7 @@ public class LzsdqRepository implements ILzsdqRepository {
         ResultSet rs = null;
         Statement stmt = null;
 
-        String sql = "SELECT * FROM paragraph WHERE paragraph.article_id=" + articleId + " ORDER BY sequence ASC";
+        String sql = "SELECT * FROM paragraph WHERE paragraph.article_id=" + articleId + " ORDER BY sequence ASC;";
 
         try {
             stmt = mConnection.createStatement();
@@ -161,7 +161,7 @@ public class LzsdqRepository implements ILzsdqRepository {
         boolean result = false;
         Statement stmt = null;
 
-        String sql = "INSERT INTO vote(article_id, vote_count) values(" + articleId + ", 1) ON DUPLICATE KEY UPDATE vote_count=vote_count+1";
+        String sql = "INSERT INTO vote(article_id, vote_count) values(" + articleId + ", 1) ON DUPLICATE KEY UPDATE vote_count=vote_count+1;";
 
         try {
             stmt = mConnection.createStatement();
@@ -182,7 +182,7 @@ public class LzsdqRepository implements ILzsdqRepository {
         Statement stmt = null;
 
         String dateStr = new DateTimeUtil().getNow();
-        String sql = "INSERT INTO read_record(article_id, read_count, last_read_time) values(" + articleId + ", 1, " + dateStr + ") ON DUPLICATE KEY UPDATE read_count=read_count+1";
+        String sql = "INSERT INTO read_record(article_id, read_count, last_read_time) values(" + articleId + ", 1, '" + dateStr + "') ON DUPLICATE KEY UPDATE read_count=read_count+1;";
 
         try {
             stmt = mConnection.createStatement();
