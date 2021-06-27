@@ -30,7 +30,7 @@ public class ArticleService {
         Paging<Article> paging = new Paging<>();
         paging.setData(articleList);
         paging.setPage(pageNum);
-        paging.setTotalPage((ArticleManager.getInstance().getSortedIdList().size() / pageSize) + 1);
+        paging.setTotalPage((int) Math.ceil(ArticleManager.getInstance().getSortedIdList().size() * 1.0 / pageSize));
         return paging;
     }
 
