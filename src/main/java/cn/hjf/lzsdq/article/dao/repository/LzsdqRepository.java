@@ -16,14 +16,9 @@ import java.util.List;
 
 public class LzsdqRepository implements ILzsdqRepository {
 
-    private Connection mConnection;
-
-    public LzsdqRepository() {
-        mConnection = ConnectionManager.getConnection();
-    }
-
     @Override
     public List<ArticleEntity> getArticleList() {
+        Connection connection = ConnectionManager.getConnection();
         ResultSet rs = null;
         Statement stmt = null;
 
@@ -34,7 +29,7 @@ public class LzsdqRepository implements ILzsdqRepository {
                 "WHERE offline.article_id IS NULL;";
 
         try {
-            stmt = mConnection.createStatement();
+            stmt = connection.createStatement();
             rs = stmt.executeQuery(sql);
 
             List<ArticleEntity> list = new ArrayList<>();
@@ -61,7 +56,9 @@ public class LzsdqRepository implements ILzsdqRepository {
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
-            ResourceCloser.closeSilent(stmt, rs);
+            ResourceCloser.closeSilent(stmt);
+            ResourceCloser.closeSilent(rs);
+            ResourceCloser.closeSilent(connection);
         }
 
         return Collections.emptyList();
@@ -73,6 +70,7 @@ public class LzsdqRepository implements ILzsdqRepository {
             return Collections.emptyList();
         }
 
+        Connection connection = ConnectionManager.getConnection();
         ResultSet rs = null;
         Statement stmt = null;
 
@@ -93,7 +91,7 @@ public class LzsdqRepository implements ILzsdqRepository {
                 "ORDER BY FIND_IN_SET(article.id, '" + idStr + "');";
 
         try {
-            stmt = mConnection.createStatement();
+            stmt = connection.createStatement();
             rs = stmt.executeQuery(sql);
 
             List<ArticleEntity> list = new ArrayList<>();
@@ -120,7 +118,9 @@ public class LzsdqRepository implements ILzsdqRepository {
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
-            ResourceCloser.closeSilent(stmt, rs);
+            ResourceCloser.closeSilent(stmt);
+            ResourceCloser.closeSilent(rs);
+            ResourceCloser.closeSilent(connection);
         }
 
         return Collections.emptyList();
@@ -128,13 +128,14 @@ public class LzsdqRepository implements ILzsdqRepository {
 
     @Override
     public List<ParagraphEntity> getParagraphList(Long articleId) {
+        Connection connection = ConnectionManager.getConnection();
         ResultSet rs = null;
         Statement stmt = null;
 
         String sql = "SELECT * FROM paragraph WHERE paragraph.article_id=" + articleId + " ORDER BY sequence ASC;";
 
         try {
-            stmt = mConnection.createStatement();
+            stmt = connection.createStatement();
             rs = stmt.executeQuery(sql);
 
             List<ParagraphEntity> list = new ArrayList<>();
@@ -150,7 +151,9 @@ public class LzsdqRepository implements ILzsdqRepository {
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
-            ResourceCloser.closeSilent(stmt, rs);
+            ResourceCloser.closeSilent(stmt);
+            ResourceCloser.closeSilent(rs);
+            ResourceCloser.closeSilent(connection);
         }
 
         return Collections.emptyList();
@@ -159,18 +162,21 @@ public class LzsdqRepository implements ILzsdqRepository {
     @Override
     public boolean vote(Long articleId) {
         boolean result = false;
+
+        Connection connection = ConnectionManager.getConnection();
         Statement stmt = null;
 
         String sql = "INSERT INTO vote(article_id, vote_count) values(" + articleId + ", 1) ON DUPLICATE KEY UPDATE vote_count=vote_count+1;";
 
         try {
-            stmt = mConnection.createStatement();
+            stmt = connection.createStatement();
             int affectRows = stmt.executeUpdate(sql);
             result = affectRows > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
-            ResourceCloser.closeSilent(stmt, null);
+            ResourceCloser.closeSilent(stmt);
+            ResourceCloser.closeSilent(connection);
         }
 
         return result;
@@ -179,19 +185,22 @@ public class LzsdqRepository implements ILzsdqRepository {
     @Override
     public boolean readRecord(Long articleId) {
         boolean result = false;
+
+        Connection connection = ConnectionManager.getConnection();
         Statement stmt = null;
 
         String dateStr = new DateTimeUtil().getNow();
         String sql = "INSERT INTO read_record(article_id, read_count, last_read_time) values(" + articleId + ", 1, '" + dateStr + "') ON DUPLICATE KEY UPDATE read_count=read_count+1;";
 
         try {
-            stmt = mConnection.createStatement();
+            stmt = connection.createStatement();
             int affectRows = stmt.executeUpdate(sql);
             result = affectRows > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
-            ResourceCloser.closeSilent(stmt, null);
+            ResourceCloser.closeSilent(stmt);
+            ResourceCloser.closeSilent(connection);
         }
 
         return result;
