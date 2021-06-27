@@ -28,18 +28,53 @@ public class ConnectionManager {
 //        return null;
 //    }
 
-    public static Connection getConnection() {
-        ComboPooledDataSource source = new ComboPooledDataSource();
+    /**
+     * ********************************************************************************************************************
+     * <p>
+     * ********************************************************************************************************************
+     */
+
+    private ComboPooledDataSource mDataSource;
+
+    /**
+     * ********************************************************************************************************************
+     * <p>
+     * ********************************************************************************************************************
+     */
+
+    private static class InstanceHolder {
+        private static ConnectionManager sInstance = new ConnectionManager();
+    }
+
+    public static ConnectionManager getInstance() {
+        return InstanceHolder.sInstance;
+    }
+
+    private ConnectionManager() {
+        init();
+    }
+
+    /**
+     * ********************************************************************************************************************
+     * <p>
+     * ********************************************************************************************************************
+     */
+
+    private void init() {
+        mDataSource = new ComboPooledDataSource();
         try {
-            source.setDriverClass("com.mysql.cj.jdbc.Driver");
+            mDataSource.setDriverClass("com.mysql.cj.jdbc.Driver");
         } catch (PropertyVetoException e) {
             e.printStackTrace();
         }
-        source.setJdbcUrl("jdbc:mysql://" + System.getenv("MYSQL_HOST") + ":" + System.getenv("MYSQL_PORT") + "/" + System.getenv("MYSQL_SCHEMA"));
-        source.setUser(System.getenv("MYSQL_USER"));
-        source.setPassword(System.getenv("MYSQL_PWD"));
+        mDataSource.setJdbcUrl("jdbc:mysql://" + System.getenv("MYSQL_HOST") + ":" + System.getenv("MYSQL_PORT") + "/" + System.getenv("MYSQL_SCHEMA"));
+        mDataSource.setUser(System.getenv("MYSQL_USER"));
+        mDataSource.setPassword(System.getenv("MYSQL_PWD"));
+    }
+
+    public Connection getConnection() {
         try {
-            return source.getConnection();
+            return mDataSource.getConnection();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

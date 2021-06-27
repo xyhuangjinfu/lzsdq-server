@@ -18,7 +18,7 @@ public class LzsdqRepository implements ILzsdqRepository {
 
     @Override
     public List<ArticleEntity> getArticleList() {
-        Connection connection = ConnectionManager.getConnection();
+        Connection connection = ConnectionManager.getInstance().getConnection();
         ResultSet rs = null;
         Statement stmt = null;
 
@@ -70,7 +70,7 @@ public class LzsdqRepository implements ILzsdqRepository {
             return Collections.emptyList();
         }
 
-        Connection connection = ConnectionManager.getConnection();
+        Connection connection = ConnectionManager.getInstance().getConnection();
         ResultSet rs = null;
         Statement stmt = null;
 
@@ -128,7 +128,7 @@ public class LzsdqRepository implements ILzsdqRepository {
 
     @Override
     public List<ParagraphEntity> getParagraphList(Long articleId) {
-        Connection connection = ConnectionManager.getConnection();
+        Connection connection = ConnectionManager.getInstance().getConnection();
         ResultSet rs = null;
         Statement stmt = null;
 
@@ -163,7 +163,7 @@ public class LzsdqRepository implements ILzsdqRepository {
     public boolean vote(Long articleId) {
         boolean result = false;
 
-        Connection connection = ConnectionManager.getConnection();
+        Connection connection = ConnectionManager.getInstance().getConnection();
         Statement stmt = null;
 
         String sql = "INSERT INTO vote(article_id, vote_count) values(" + articleId + ", 1) ON DUPLICATE KEY UPDATE vote_count=vote_count+1;";
@@ -186,7 +186,7 @@ public class LzsdqRepository implements ILzsdqRepository {
     public boolean readRecord(Long articleId) {
         boolean result = false;
 
-        Connection connection = ConnectionManager.getConnection();
+        Connection connection = ConnectionManager.getInstance().getConnection();
         Statement stmt = null;
 
         String dateStr = new DateTimeUtil().getNow();
