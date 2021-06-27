@@ -1,30 +1,18 @@
-package cn.hjf.lzsdq.article.dao.entity;
+package cn.hjf.lzsdq.article.dao.model;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
-@Entity
-@Table(name = "article")
 public class ArticleEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column(name = "title")
     private String title;
-
-    @Column(name = "summary")
     private String summary;
-
-    @Column(name = "cover_url")
     private String coverUrl;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "create_time")
     private Date createTime;
+    private List<ParagraphEntity> paragraphs;
+    private ReadRecordEntity readRecord;
+    private VoteEntity vote;
 
     public Long getId() {
         return id;
@@ -64,5 +52,29 @@ public class ArticleEntity {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public List<ParagraphEntity> getParagraphs() {
+        return paragraphs;
+    }
+
+    public void setParagraphs(List<ParagraphEntity> paragraphs) {
+        this.paragraphs = paragraphs;
+    }
+
+    public ReadRecordEntity getReadRecord() {
+        return readRecord;
+    }
+
+    public void setReadRecord(ReadRecordEntity readRecord) {
+        this.readRecord = readRecord;
+    }
+
+    public VoteEntity getVote() {
+        return vote;
+    }
+
+    public void setVote(VoteEntity vote) {
+        this.vote = vote;
     }
 }

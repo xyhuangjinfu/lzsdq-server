@@ -1,31 +1,23 @@
 package cn.hjf.lzsdq.article.biz.transfer;
 
 import cn.hjf.lzsdq.article.biz.model.Paragraph;
-import cn.hjf.lzsdq.article.dao.entity.ParagraphEntity;
+import cn.hjf.lzsdq.article.dao.model.ParagraphEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ParagraphTransfer {
 
-    public Paragraph fromEntity(ParagraphEntity paragraphEntity) {
-        if (paragraphEntity == null) {
-            return null;
-        }
+    public Paragraph fromEntity(ParagraphEntity entity) {
         Paragraph paragraph = new Paragraph();
-        paragraph.setId(paragraphEntity.getId());
-        paragraph.setArticleId(paragraphEntity.getArticleId());
-        paragraph.setSequence(paragraphEntity.getSequence());
-        paragraph.setContent(paragraphEntity.getContent());
+        paragraph.setSequence(entity.getSequence());
+        paragraph.setContent(entity.getContent());
         return paragraph;
     }
 
-    public List<Paragraph> fromEntityList(List<ParagraphEntity> paragraphEntityList) {
-        if (paragraphEntityList == null) {
-            return null;
-        }
+    public List<Paragraph> fromEntityList(List<ParagraphEntity> entityList) {
         List<Paragraph> paragraphList = new ArrayList<>();
-        for (ParagraphEntity e : paragraphEntityList) {
+        for (ParagraphEntity e : entityList) {
             paragraphList.add(fromEntity(e));
         }
         return paragraphList;

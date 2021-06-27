@@ -1,6 +1,6 @@
-package cn.hjf.lzsdq.article.biz.model;
+package cn.hjf.lzsdq.article.dao.model;
 
-public class Vote {
+public class VoteEntity {
 
     private Long articleId;
     private Long voteCount;

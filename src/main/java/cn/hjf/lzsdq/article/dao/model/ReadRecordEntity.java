@@ -1,26 +1,11 @@
-package cn.hjf.lzsdq.article.dao.entity;
+package cn.hjf.lzsdq.article.dao.model;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
 
-@Entity
-@Table(name = "read_record")
 public class ReadRecordEntity {
 
-    @Id
-    @Column(name = "article_id")
     private Long articleId;
-
-    @Column(name = "read_count")
     private Long readCount;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "last_read_time")
     private Date lastReadTime;
 
     public Long getArticleId() {

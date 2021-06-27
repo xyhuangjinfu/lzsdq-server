@@ -11,8 +11,8 @@ public class Article {
     private String coverUrl;
     private Date createTime;
     private List<Paragraph> paragraphs;
-    private ReadRecord readRecord;
-    private Vote vote;
+    private long readCount;
+    private long voteCount;
 
     public Long getId() {
         return id;
@@ -62,19 +62,19 @@ public class Article {
         this.paragraphs = paragraphs;
     }
 
-    public ReadRecord getReadRecord() {
-        return readRecord;
+    public long getReadCount() {
+        return readCount;
     }
 
-    public void setReadRecord(ReadRecord readRecord) {
-        this.readRecord = readRecord;
+    public void setReadCount(long readCount) {
+        this.readCount = readCount;
     }
 
-    public Vote getVote() {
-        return vote;
+    public long getVoteCount() {
+        return voteCount;
     }
 
-    public void setVote(Vote vote) {
-        this.vote = vote;
+    public void setVoteCount(long voteCount) {
+        this.voteCount = voteCount;
     }
 }
