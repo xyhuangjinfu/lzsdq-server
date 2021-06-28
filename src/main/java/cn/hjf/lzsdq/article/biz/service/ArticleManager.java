@@ -88,7 +88,9 @@ public class ArticleManager {
 
     private double articleScore(ArticleEntity articleEntity) {
         long vote = articleEntity.getVote().getVoteCount();
+        vote = Math.max(vote, 1);
         int days = new DateTimeUtil().betweenDaysToNow(articleEntity.getCreateTime());
-        return vote / Math.pow(days + 2, 1.8);
+        double score = vote / Math.pow(days + 2, 1.8);
+        return score;
     }
 }
