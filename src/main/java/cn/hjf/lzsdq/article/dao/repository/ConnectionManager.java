@@ -70,6 +70,7 @@ public class ConnectionManager {
         mDataSource.setJdbcUrl("jdbc:mysql://" + System.getenv("MYSQL_HOST") + ":" + System.getenv("MYSQL_PORT") + "/" + System.getenv("MYSQL_SCHEMA"));
         mDataSource.setUser(System.getenv("MYSQL_USER"));
         mDataSource.setPassword(System.getenv("MYSQL_PWD"));
+        mDataSource.setMaxPoolSize(50);
     }
 
     public Connection getConnection() {
