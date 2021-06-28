@@ -4,6 +4,7 @@ import cn.hjf.lzsdq.article.biz.model.Article;
 import cn.hjf.lzsdq.article.biz.service.ArticleService;
 import cn.hjf.lzsdq.utils.Paging;
 import cn.hjf.lzsdq.utils.Result;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +41,11 @@ public class ArticleController {
     public ResponseEntity<Article> getArticleById(@PathVariable(value = "article_id") Integer articleId) {
         ArticleService articleService = new ArticleService();
         Article article = articleService.articleDetail(Long.valueOf(articleId));
+
+        if (article == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
         return ResponseEntity.ok(article);
     }
 

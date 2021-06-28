@@ -36,6 +36,10 @@ public class ArticleService {
 
     public Article articleDetail(Long articleId) {
         List<ArticleEntity> articleEntityList = mLzsdqRepository.getArticleList(Arrays.asList(articleId));
+        if (articleEntityList == null || articleEntityList.isEmpty()) {
+            return null;
+        }
+
         List<ParagraphEntity> paragraphEntityList = mLzsdqRepository.getParagraphList(articleId);
         ArticleEntity articleEntity = articleEntityList.get(0);
 

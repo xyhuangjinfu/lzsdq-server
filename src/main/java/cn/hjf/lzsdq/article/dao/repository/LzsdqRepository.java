@@ -85,9 +85,11 @@ public class LzsdqRepository implements ILzsdqRepository {
         String idStr = idStrBuilder.toString();
 
         String sql = "SELECT article.id, article.title, article.summary, article.cover_url, article.create_time, read_record.read_count, vote.vote_count FROM article " +
+                "LEFT JOIN offline ON article.id=offline.article_id " +
                 "LEFT JOIN read_record ON article.id=read_record.article_id " +
                 "LEFT JOIN vote ON article.id=vote.article_id " +
                 "WHERE article.id in (" + idStr + ") " +
+                "AND offline.article_id IS NULL " +
                 "ORDER BY FIND_IN_SET(article.id, '" + idStr + "');";
 
         try {
