@@ -59,29 +59,29 @@ public class ArticleService {
     }
 
     public List<Article> hotArticleList(Integer limit) {
-//        List<ArticleEntity> articleEntityList = ArticleManager.getInstance().getArticleEntityList();
-//        articleEntityList.sort(new Comparator<ArticleEntity>() {
-//            @Override
-//            public int compare(ArticleEntity o1, ArticleEntity o2) {
-//                return o2.getReadRecord().getReadCount().compareTo(o1.getReadRecord().getReadCount());
-//            }
-//        });
-//        int hotNum = limit;
-//        List<Long> hotIdList = new ArrayList<>(hotNum);
-//        for (int i = 0; i < hotNum; i++) {
-//            hotIdList.add(articleEntityList.get(i).getId());
-//        }
-//
-//        List<ArticleEntity> hotArticleEntityList = mLzsdqRepository.getArticleList(hotIdList);
-//        List<Article> articleList = new ArrayList<>(articleEntityList.size());
-//        ArticleTransfer articleTransfer = new ArticleTransfer();
-//        for (ArticleEntity e : hotArticleEntityList) {
-//            Article article = articleTransfer.fromEntity(e);
-//            articleList.add(article);
-//        }
-//        return articleList;
+        List<ArticleEntity> mostVotedList = mLzsdqRepository.getMostVotedList(limit);
+        //数据不足 limit 条，从默认列表中补充
+        if (mostVotedList.size() < limit) {
+            List<ArticleEntity> articleEntityList = ArticleManager.getInstance().getArticleEntityList();
 
-        List<ArticleEntity> mostVotedList = mLzsdqRepository.getMostVotedList(10);
+            for (ArticleEntity e : articleEntityList) {
+                boolean inHot = false;
+                for (ArticleEntity he : mostVotedList) {
+                    if (e.getId().equals(he.getId())) {
+                        inHot = true;
+                        break;
+                    }
+                }
+                if (!inHot) {
+                    mostVotedList.add(e);
+                }
+
+                if (mostVotedList.size() >= limit) {
+                    break;
+                }
+            }
+        }
+
         List<Article> articleList = new ArrayList<>(mostVotedList.size());
         ArticleTransfer articleTransfer = new ArticleTransfer();
         for (ArticleEntity e : mostVotedList) {
