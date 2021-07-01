@@ -12,8 +12,12 @@ public class ArticleTransfer {
         article.setSummary(articleEntity.getSummary());
         article.setCoverUrl(articleEntity.getCoverUrl());
         article.setCreateTime(articleEntity.getCreateTime());
-        article.setReadCount(articleEntity.getReadRecord().getReadCount());
-        article.setVoteCount(articleEntity.getVote().getVoteCount());
+        if (articleEntity.getReadRecord() != null) {
+            article.setReadCount(articleEntity.getReadRecord().getReadCount());
+        }
+        if (articleEntity.getVote() != null) {
+            article.setVoteCount(articleEntity.getVote().getVoteCount());
+        }
         return article;
     }
 }
