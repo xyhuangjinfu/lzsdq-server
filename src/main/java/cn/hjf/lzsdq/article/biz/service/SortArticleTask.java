@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SortArticleTask {
 
-    @Scheduled(cron = "0 0 1 * * ?")
+    @Scheduled(cron = "0 0 * * * ? ")
     public void execute() {
         ArticleManager.getInstance().update();
     }
