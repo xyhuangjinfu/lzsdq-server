@@ -31,6 +31,14 @@ public interface ILzsdqRepository {
     List<ParagraphEntity> getParagraphList(Long articleId);
 
     /**
+     * 查询点赞最多的文章
+     *
+     * @param limit 点赞最多的前 limit 个
+     * @return
+     */
+    List<ArticleEntity> getMostVotedList(int limit);
+
+    /**
      * 给文章点赞
      *
      * @param articleId

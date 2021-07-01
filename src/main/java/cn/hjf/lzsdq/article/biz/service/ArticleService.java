@@ -11,7 +11,6 @@ import cn.hjf.lzsdq.utils.Paging;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 public class ArticleService {
@@ -60,23 +59,32 @@ public class ArticleService {
     }
 
     public List<Article> hotArticleList(Integer limit) {
-        List<ArticleEntity> articleEntityList = ArticleManager.getInstance().getArticleEntityList();
-        articleEntityList.sort(new Comparator<ArticleEntity>() {
-            @Override
-            public int compare(ArticleEntity o1, ArticleEntity o2) {
-                return o2.getReadRecord().getReadCount().compareTo(o1.getReadRecord().getReadCount());
-            }
-        });
-        int hotNum = limit;
-        List<Long> hotIdList = new ArrayList<>(hotNum);
-        for (int i = 0; i < hotNum; i++) {
-            hotIdList.add(articleEntityList.get(i).getId());
-        }
+//        List<ArticleEntity> articleEntityList = ArticleManager.getInstance().getArticleEntityList();
+//        articleEntityList.sort(new Comparator<ArticleEntity>() {
+//            @Override
+//            public int compare(ArticleEntity o1, ArticleEntity o2) {
+//                return o2.getReadRecord().getReadCount().compareTo(o1.getReadRecord().getReadCount());
+//            }
+//        });
+//        int hotNum = limit;
+//        List<Long> hotIdList = new ArrayList<>(hotNum);
+//        for (int i = 0; i < hotNum; i++) {
+//            hotIdList.add(articleEntityList.get(i).getId());
+//        }
+//
+//        List<ArticleEntity> hotArticleEntityList = mLzsdqRepository.getArticleList(hotIdList);
+//        List<Article> articleList = new ArrayList<>(articleEntityList.size());
+//        ArticleTransfer articleTransfer = new ArticleTransfer();
+//        for (ArticleEntity e : hotArticleEntityList) {
+//            Article article = articleTransfer.fromEntity(e);
+//            articleList.add(article);
+//        }
+//        return articleList;
 
-        List<ArticleEntity> hotArticleEntityList = mLzsdqRepository.getArticleList(hotIdList);
-        List<Article> articleList = new ArrayList<>(articleEntityList.size());
+        List<ArticleEntity> mostVotedList = mLzsdqRepository.getMostVotedList(10);
+        List<Article> articleList = new ArrayList<>(mostVotedList.size());
         ArticleTransfer articleTransfer = new ArticleTransfer();
-        for (ArticleEntity e : hotArticleEntityList) {
+        for (ArticleEntity e : mostVotedList) {
             Article article = articleTransfer.fromEntity(e);
             articleList.add(article);
         }

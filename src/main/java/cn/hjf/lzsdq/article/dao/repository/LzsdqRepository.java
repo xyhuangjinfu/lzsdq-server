@@ -162,6 +162,55 @@ public class LzsdqRepository implements ILzsdqRepository {
     }
 
     @Override
+    public List<ArticleEntity> getMostVotedList(int limit) {
+        if (limit <= 0) {
+            return Collections.emptyList();
+        }
+
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        ResultSet rs = null;
+        Statement stmt = null;
+
+        String sql = "SELECT vote.article_id, vote.vote_count, article.id, article.title, article.summary, article.cover_url, article.create_time FROM lzsdq.vote " +
+                "LEFT JOIN article ON vote.article_id=article.id " +
+                "ORDER BY vote_count DESC " +
+                "LIMIT " +
+                limit;
+
+        try {
+            stmt = connection.createStatement();
+            rs = stmt.executeQuery(sql);
+
+            List<ArticleEntity> list = new ArrayList<>();
+            while (rs.next()) {
+                ArticleEntity entity = new ArticleEntity();
+                entity.setId(rs.getLong(3));
+                entity.setTitle(rs.getString(4));
+                entity.setSummary(rs.getString(5));
+                entity.setCoverUrl(rs.getString(6));
+                entity.setCreateTime(rs.getTimestamp(7));
+
+                VoteEntity voteEntity = new VoteEntity();
+                voteEntity.setArticleId(rs.getLong(1));
+                voteEntity.setVoteCount(rs.getLong(2));
+                entity.setVote(voteEntity);
+
+                list.add(entity);
+            }
+
+            return list;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            ResourceCloser.closeSilent(stmt);
+            ResourceCloser.closeSilent(rs);
+            ResourceCloser.closeSilent(connection);
+        }
+
+        return Collections.emptyList();
+    }
+
+    @Override
     public boolean vote(Long articleId) {
         boolean result = false;
 
