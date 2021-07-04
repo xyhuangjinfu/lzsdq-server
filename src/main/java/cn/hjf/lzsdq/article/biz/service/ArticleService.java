@@ -45,8 +45,6 @@ public class ArticleService {
         Article article = new ArticleTransfer().fromEntity(articleEntity);
         article.setParagraphs(new ParagraphTransfer().fromEntityList(paragraphEntityList));
 
-        updateReadCount(articleId);
-
         return article;
     }
 

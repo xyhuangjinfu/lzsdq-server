@@ -76,4 +76,19 @@ public class ArticleController {
         result.setSuccess(success);
         return ResponseEntity.ok(result);
     }
+
+    /**
+     * 记录阅读次数
+     *
+     * @return
+     */
+    @PostMapping("/read")
+    @CrossOrigin
+    public ResponseEntity<Result> readArticle(@RequestBody Article article) {
+        ArticleService articleService = new ArticleService();
+        boolean success = articleService.updateReadCount(article.getId());
+        Result result = new Result();
+        result.setSuccess(success);
+        return ResponseEntity.ok(result);
+    }
 }
