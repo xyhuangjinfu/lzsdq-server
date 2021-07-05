@@ -89,6 +89,9 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.4.5</version>
+                <configuration>
+                    <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
+                </configuration>
             </plugin>
 
             <plugin>
