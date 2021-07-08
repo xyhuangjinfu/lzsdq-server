@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class LzsdqRepository implements ILzsdqRepository {
@@ -61,13 +60,13 @@ public class LzsdqRepository implements ILzsdqRepository {
             ResourceCloser.closeSilent(connection);
         }
 
-        return Collections.emptyList();
+        return new ArrayList<>();
     }
 
     @Override
     public List<ArticleEntity> getArticleList(List<Long> articleIdList) {
         if (articleIdList == null || articleIdList.isEmpty()) {
-            return Collections.emptyList();
+            return new ArrayList<>();
         }
 
         Connection connection = ConnectionManager.getInstance().getConnection();
@@ -125,7 +124,7 @@ public class LzsdqRepository implements ILzsdqRepository {
             ResourceCloser.closeSilent(connection);
         }
 
-        return Collections.emptyList();
+        return new ArrayList<>();
     }
 
     @Override
@@ -158,13 +157,13 @@ public class LzsdqRepository implements ILzsdqRepository {
             ResourceCloser.closeSilent(connection);
         }
 
-        return Collections.emptyList();
+        return new ArrayList<>();
     }
 
     @Override
     public List<ArticleEntity> getMostVotedList(int limit) {
         if (limit <= 0) {
-            return Collections.emptyList();
+            return new ArrayList<>();
         }
 
         Connection connection = ConnectionManager.getInstance().getConnection();
@@ -207,7 +206,7 @@ public class LzsdqRepository implements ILzsdqRepository {
             ResourceCloser.closeSilent(connection);
         }
 
-        return Collections.emptyList();
+        return new ArrayList<>();
     }
 
     @Override
